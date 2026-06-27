@@ -1,5 +1,7 @@
 import os
 import time
+import re
+from datetime import datetime
 from colorama import Fore, Style, init
 
 # /mnt/storagedrive/Game Dev/GodotGames/my-summer-at-sapphos-bathhouse
@@ -7,9 +9,10 @@ from colorama import Fore, Style, init
 init(autoreset = True)
 
 total = 0
+pattern = r'uid://[A-Za-z0-9]+'
 
 file_path = input('Enter path to project folder: ')
-file_path = '/mnt/storagedrive/Game Dev/GodotGames/my-summer-at-sapphos-bathhouse'
+#file_path = '/mnt/storagedrive/Game Dev/GodotGames/my-summer-at-sapphos-bathhouse'
 
 if not os.path.exists(file_path):
 	print(Fore.RED + 'Error:' + Style.RESET_ALL + ' The specified path does not exist.')
@@ -18,11 +21,16 @@ else:
 
 files_with_uids = []
 uids_to_fix = []
+log_lines = []
 good_uids = {}
+
+log_lines.append(f'Starting UID scan and fix on {datetime.now()} ...')
+log_lines.append(f'Scanning {file_path} for .import files...')
 
 processed_count = 0
 for root, dirs, files in os.walk(file_path):
 	total = len(files)
+	log_lines.append(f"Found {total} total files...")
 	#print(f"\nScanning {len(files)} files in {file_path}")
 	for i, file in enumerate(files, start=1):
 		if file.endswith('.import'):
@@ -38,8 +46,49 @@ for root, dirs, files in os.walk(file_path):
 						temp_uid = line.split('=')[1].strip().replace('"', '')
 			if temp_save_path != '' and temp_uid != '':
 				good_uids[temp_save_path] = temp_uid
+				log_lines.append(f'{temp_uid} - {temp_save_path}')
+				for root, dirs, files in os.walk(file_path):
+					for file in files:
+						if file.endswith('.tscn'):
+							file_check_bool = False
+							with open(os.path.join(root, file), 'r') as file_check:
+								for line in file_check:
+									if temp_save_path in line and temp_uid not in line:
+										#print(f'found door cube in: ' + os.path.join(root, file))
+										log_lines.append(f'Found bad UID for {temp_save_path}')
+										file_check_bool = True
+										break
+							if file_check_bool:
+								#print(os.path.join(root, file))
+								output_file = []
+								with open(os.path.join(root, file), 'r') as file_open:
+									for line in file_open:
+										if temp_uid in line:
+											temp = line.split(' ')
+											line_out = []
+											for item in temp:
+												if item.startswith('uid='):
+													#print(re.sub(pattern, f'uid://{good_uids[key].replace('uid://', '')}', item))
+													log_lines.append(f'Replaced {item} with {temp_uid}')
+													line_out.append(re.sub(pattern, f'uid://{temp_uid.replace('uid://', '')}', item))
+												else:
+													line_out.append(item)
+											output_file.append(' '.join(line_out).strip())
+										else:
+											output_file.append(line.strip())
+								log_lines.append('Writing to ' + os.path.join(root, file))
+								try:
+									with open('uid_fix_log_{datetime.now().strftime("%Y%m%d%H%M%S")}.log', 'w') as log_writer:
+										for log_line in log_lines:
+											log_writer.write(log_line + '\n')
+								except Exception as e:
+									print(Fore.RED + 'Error' + Style.RESET_ALL + ' writing log file: ' + str(e))
+								with open(os.path.join(root, file), 'w') as write_out:
+									for line in output_file:
+										write_out.write(line + '\n')
+								#print('Done writing out ' + os.path.join(root, file))
 		
-		""" width = 40
+		width = 40
 		progress = i / total
 		filled = int(progress * width)
 		bar = Fore.LIGHTYELLOW_EX + '#' * filled + Fore.LIGHTBLACK_EX + '-' * (width - filled)
@@ -47,24 +96,47 @@ for root, dirs, files in os.walk(file_path):
 			print(f"\r[{bar}] {Fore.LIGHTGREEN_EX}{i}/{total}{Style.RESET_ALL} files ({progress:.1%})", end="", flush=True)
 		else:
 			print(f"\r[{bar}] {Fore.LIGHTRED_EX}{i}/{Fore.LIGHTGREEN_EX}{total}{Style.RESET_ALL} files ({progress:.1%})", end="", flush=True)
-		time.sleep(0.01) """
+		time.sleep(0.01)
 	if total > 0:
 		processed_count += 1
 		print(f'\nProcessed{processed_count}')
 
 print('All files processed')
-
+"""
 for key in good_uids:
+	print(key + ' : ' + str(good_uids[key]))
 	if 'SapphosMansionBedroomDoorR_Cube_126.res' in key:
 		print(key + ' : ' + str(good_uids[key]))
 		for root, dirs, files in os.walk(file_path):
 			for file in files:
 				if file.endswith('.tscn'):
-					with open(os.path.join(root, file), 'r') as file_open:
-						for line in file_open:
-							if key in line:
-								temp = line.split(' ')
-								for item in temp:
-									if item.startswith('uid='):
-										print(item + ' - ' + good_uids[key])
+					file_check_bool = False
+					with open(os.path.join(root, file), 'r') as file_check:
+						for line in file_check:
+							if 'SapphosMansionBedroomDoorR_Cube_126.res' in line:
+								print(f'found door cube in: ' + os.path.join(root, file))
+								file_check_bool = True
+								break
+					if file_check_bool:
+						#print(os.path.join(root, file))
+						output_file = []
+						with open(os.path.join(root, file), 'r') as file_open:
+							for line in file_open:
+								if key in line:
+									temp = line.split(' ')
+									line_out = []
+									for item in temp:
+										if item.startswith('uid='):
+											print(re.sub(pattern, f'uid://{good_uids[key].replace('uid://', '')}', item))
+											line_out.append(re.sub(pattern, f'uid://{good_uids[key].replace('uid://', '')}', item))
+										else:
+											line_out.append(item)
+									output_file.append(' '.join(line_out).strip())
+								else:
+									output_file.append(line.strip())
+						
+						with open(os.path.join(root, file), 'w') as write_out:
+							for line in output_file:
+								write_out.write(line + '\n')
+						print('Done writing out ' + os.path.join(root, file)) """
 

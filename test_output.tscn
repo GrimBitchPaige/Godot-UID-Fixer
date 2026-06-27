@@ -1,0 +1,140 @@
+[gd_scene format=3 uid="uid://ddfmcoowsrnb0"]
+
+[ext_resource type="Script" uid="uid://d32vsuo328xao" path="res://blockout/OriginGLBs/SapphosMansion/sapphos_bedroom_doors.gd" id="1_m126r"]
+[ext_resource type="AudioStream" uid="uid://d2nxo10dkjilp" path="res://blockout/Sounds/door_open.mp3" id="2_2opp8"]
+[ext_resource type="ArrayMesh" uid="uid://b4so03dk2vqii" path="res://blockout/OriginGLBs/SapphosMansion/Meshes/SapphosMansionBedroomDoorL_Cube_127.res" id="2_xi8n7"]
+[ext_resource type="ArrayMesh" uid="uid://7gtpl0lcwy4u" path="res://blockout/OriginGLBs/SapphosMansion/Meshes/SapphosMansionBedroomDoorR_Cube_126.res" id="3_1u5si"]
+[ext_resource type="AudioStream" uid="uid://ceu1wcuorbw6g" path="res://blockout/Sounds/door_close.mp3" id="3_m126r"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_cyeuv"]
+data = PackedVector3Array(0.0122, 9.089, 0.2942, -4.4069, 9.089, -0.2942, 0.0122, 9.089, -0.2942, 0.0122, 9.089, 0.2942, -4.4069, 9.089, 0.2942, -4.4069, 9.089, -0.2942, -4.4069, 9.089, 0.2942, -4.4069, 0.0069, -0.2942, -4.4069, 9.089, -0.2942, -4.4069, 9.089, 0.2942, -4.4069, 0.0069, 0.2942, -4.4069, 0.0069, -0.2942, 0.0122, 9.089, 0.2942, -4.4069, 0.0069, 0.2942, -4.4069, 9.089, 0.2942, 0.0122, 9.089, 0.2942, 0.0122, 0.0069, 0.2942, -4.4069, 0.0069, 0.2942, -4.4069, 9.089, -0.2942, 0.0122, 0.0069, -0.2942, 0.0122, 9.089, -0.2942, -4.4069, 9.089, -0.2942, -4.4069, 0.0069, -0.2942, 0.0122, 0.0069, -0.2942, -4.4069, 0.0069, 0.2942, 0.0122, 0.0069, -0.2942, -4.4069, 0.0069, -0.2942, -4.4069, 0.0069, 0.2942, 0.0122, 0.0069, 0.2942, 0.0122, 0.0069, -0.2942, 0.0122, 0.0069, -0.2942, 0.0122, 9.089, 0.2942, 0.0122, 9.089, -0.2942, 0.0122, 0.0069, -0.2942, 0.0122, 0.0069, 0.2942, 0.0122, 9.089, 0.2942)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_khacu"]
+data = PackedVector3Array(4.4238997, 9.089, 0.2942, 0.0047999998, 9.089, -0.2942, 4.4238997, 9.089, -0.2942, 4.4238997, 9.089, 0.2942, 0.0047999998, 9.089, 0.2942, 0.0047999998, 9.089, -0.2942, 0.0047999998, 9.089, 0.2942, 0.0047999998, 0.0069, -0.2942, 0.0047999998, 9.089, -0.2942, 0.0047999998, 9.089, 0.2942, 0.0047999998, 0.0069, 0.2942, 0.0047999998, 0.0069, -0.2942, 4.4238997, 9.089, 0.2942, 0.0047999998, 0.0069, 0.2942, 0.0047999998, 9.089, 0.2942, 4.4238997, 9.089, 0.2942, 4.4238997, 0.0069, 0.2942, 0.0047999998, 0.0069, 0.2942, 0.0047999998, 9.089, -0.2942, 4.4238997, 0.0069, -0.2942, 4.4238997, 9.089, -0.2942, 0.0047999998, 9.089, -0.2942, 0.0047999998, 0.0069, -0.2942, 4.4238997, 0.0069, -0.2942, 0.0047999998, 0.0069, 0.2942, 4.4238997, 0.0069, -0.2942, 0.0047999998, 0.0069, -0.2942, 0.0047999998, 0.0069, 0.2942, 4.4238997, 0.0069, 0.2942, 4.4238997, 0.0069, -0.2942, 4.4238997, 0.0069, -0.2942, 4.4238997, 9.089, 0.2942, 4.4238997, 9.089, -0.2942, 4.4238997, 0.0069, -0.2942, 4.4238997, 0.0069, 0.2942, 4.4238997, 9.089, 0.2942)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_brdn3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_brdn3"]
+size = Vector3(8.859436, 8.9175415, 9.330994)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a0hgk"]
+size = Vector3(8.850098, 8.927002, 11.546875)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_brdn3"]
+viewport_path = NodePath("ActivationPrompt/SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_a0hgk"]
+viewport_path = NodePath("ActivationPromptBack/SubViewport")
+
+[node name="SapphosBedroomDoors" type="Node3D" unique_id=718679830]
+script = ExtResource("1_m126r")
+
+[node name="RDoor" type="MeshInstance3D" parent="." unique_id=588351097]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4185915, 0, 0.021)
+mesh = ExtResource("2_xi8n7")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="RDoor" unique_id=1508163073]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RDoor/StaticBody3D" unique_id=1992595204]
+shape = SubResource("ConcavePolygonShape3D_cyeuv")
+
+[node name="LDoor" type="MeshInstance3D" parent="." unique_id=339597429]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.439662, 0, 0.021)
+mesh = ExtResource("3_1u5si")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="LDoor" unique_id=1993071334]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LDoor/StaticBody3D" unique_id=1208103616]
+shape = SubResource("ConcavePolygonShape3D_khacu")
+
+[node name="OutsideMarker" type="MeshInstance3D" parent="." unique_id=608430803]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5624733, 1.4708538)
+mesh = SubResource("CapsuleMesh_brdn3")
+
+[node name="ActivationArea" type="Area3D" parent="." unique_id=699717162]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ActivationArea" unique_id=1032193462]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00869751, 4.6076803, 6.4346104)
+shape = SubResource("BoxShape3D_brdn3")
+
+[node name="ActivationAreaBack" type="Area3D" parent="." unique_id=767638194]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ActivationAreaBack" unique_id=1597937938]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.010009766, 4.588787, -7.411937)
+shape = SubResource("BoxShape3D_a0hgk")
+
+[node name="ActivationPrompt" type="Sprite3D" parent="." unique_id=1118023664]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.910763, 0.81425905)
+texture = SubResource("ViewportTexture_brdn3")
+
+[node name="SubViewport" type="SubViewport" parent="ActivationPrompt" unique_id=241556878]
+transparent_bg = true
+
+[node name="Control" type="Control" parent="ActivationPrompt/SubViewport" unique_id=236868848]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 512.0
+offset_bottom = 512.0
+
+[node name="Label" type="Label" parent="ActivationPrompt/SubViewport/Control" unique_id=1069513817]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -63.0
+offset_top = -11.5
+offset_right = 63.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+text = "Press 'F' to open"
+horizontal_alignment = 1
+
+[node name="ActivationPromptBack" type="Sprite3D" parent="." unique_id=811774452]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 5.543483, -1.5568504)
+texture = SubResource("ViewportTexture_a0hgk")
+
+[node name="SubViewport" type="SubViewport" parent="ActivationPromptBack" unique_id=1881793118]
+transparent_bg = true
+
+[node name="Control" type="Control" parent="ActivationPromptBack/SubViewport" unique_id=435348641]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 512.0
+offset_bottom = 512.0
+
+[node name="Label" type="Label" parent="ActivationPromptBack/SubViewport/Control" unique_id=949804981]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -157.0
+offset_top = -27.5
+offset_right = 157.0
+offset_bottom = 27.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+text = "Press 'F' to open"
+horizontal_alignment = 1
+
+[node name="LOpenSound" type="AudioStreamPlayer3D" parent="." unique_id=683383443]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.343171, 0)
+stream = ExtResource("2_2opp8")
+
+[node name="ROpenSound" type="AudioStreamPlayer3D" parent="." unique_id=1293662170]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.343171, 0)
+stream = ExtResource("2_2opp8")
+
+[node name="LCloseSound" type="AudioStreamPlayer3D" parent="." unique_id=1217106420]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.343171, 0)
+stream = ExtResource("3_m126r")
+
+[node name="RCloseSound" type="AudioStreamPlayer3D" parent="." unique_id=1908179622]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.343171, 0)
+stream = ExtResource("3_m126r")
