@@ -12,7 +12,7 @@ total = 0
 pattern = r'uid://[A-Za-z0-9]+'
 
 file_path = input('Enter path to project folder: ')
-#file_path = '/mnt/storagedrive/Game Dev/GodotGames/my-summer-at-sapphos-bathhouse'
+file_path = '/mnt/storagedrive/Game Dev/GodotGames/my-summer-at-sapphos-bathhouse'
 
 if not os.path.exists(file_path):
 	print(Fore.RED + 'Error:' + Style.RESET_ALL + ' The specified path does not exist.')
@@ -22,22 +22,31 @@ else:
 files_with_uids = []
 uids_to_fix = []
 log_lines = []
-good_uids = {}
+#good_uids = {}
 
 log_lines.append(f'Starting UID scan and fix on {datetime.now()} ...')
 log_lines.append(f'Scanning {file_path} for .import files...')
 
 processed_count = 0
+#############################################################################
+#------ Walk through all files in the directory and its subdirectories -----#
+#############################################################################
 for root, dirs, files in os.walk(file_path):
 	total = len(files)
-	log_lines.append(f"Found {total} total files...")
+	if total > 0:
+		pass
+		#log_lines.append(f"Found {total} total files...")
 	#print(f"\nScanning {len(files)} files in {file_path}")
+
+###################################################
+#------ Find all import files and their UIDs -----#
+###################################################
 	for i, file in enumerate(files, start=1):
 		if file.endswith('.import'):
-			files_with_uids.append(os.path.join(root, file))
+			#files_with_uids.append(os.path.join(root, file))
 			temp_file_path = os.path.join(root, file)
-			temp_save_path = ''
-			temp_uid = ''
+			temp_save_path = '' #<------- used to find instances in other files where there may be a different UID
+			temp_uid = ''		#<------- good UID
 			with open(temp_file_path, 'r') as file_open:
 				for line in file_open:
 					if 'save_to_file/fallback_path' in line and 'slice' not in line:
@@ -45,25 +54,32 @@ for root, dirs, files in os.walk(file_path):
 					if 'uid=' in line:
 						temp_uid = line.split('=')[1].strip().replace('"', '')
 			if temp_save_path != '' and temp_uid != '':
-				good_uids[temp_save_path] = temp_uid
-				log_lines.append(f'{temp_uid} - {temp_save_path}')
-				for root, dirs, files in os.walk(file_path):
-					for file in files:
-						if file.endswith('.tscn'):
+				#good_uids[temp_save_path] = temp_uid
+				log_lines.append(f'\n------ {temp_uid} - {temp_save_path}')
+
+#############################################################################################################
+#-------- Walk through all files again to find instances of temp_save_path and check for different UID -----#
+#############################################################################################################
+				for root2, dirs2, files2 in os.walk(file_path):
+					for file2 in files2:
+						if file2.endswith('.tscn'):
 							file_check_bool = False
-							with open(os.path.join(root, file), 'r') as file_check:
+							with open(os.path.join(root2, file2), 'r', encoding='utf-8') as file_check:
+								log_lines.append(f'checking: {os.path.join(root2, file2)} for bad UID')
 								for line in file_check:
 									if temp_save_path in line and temp_uid not in line:
 										#print(f'found door cube in: ' + os.path.join(root, file))
 										log_lines.append(f'Found bad UID for {temp_save_path}')
+										log_lines.append(f'------ Good UID: {temp_uid} Bad UID: {line}')
 										file_check_bool = True
 										break
 							if file_check_bool:
 								#print(os.path.join(root, file))
 								output_file = []
-								with open(os.path.join(root, file), 'r') as file_open:
+								with open(os.path.join(root2, file2), 'r') as file_open:
+									log_lines.append(f'	Fixing: {os.path.join(root2, file2)}')
 									for line in file_open:
-										if temp_uid in line:
+										if temp_save_path in line:
 											temp = line.split(' ')
 											line_out = []
 											for item in temp:
@@ -73,19 +89,19 @@ for root, dirs, files in os.walk(file_path):
 													line_out.append(re.sub(pattern, f'uid://{temp_uid.replace('uid://', '')}', item))
 												else:
 													line_out.append(item)
-											output_file.append(' '.join(line_out).strip())
+											output_file.append(' '.join(line_out))
 										else:
-											output_file.append(line.strip())
-								log_lines.append('Writing to ' + os.path.join(root, file))
+											output_file.append(line)
+								log_lines.append('Writing to ' + os.path.join(root2, file2))
 								try:
-									with open('uid_fix_log_{datetime.now().strftime("%Y%m%d%H%M%S")}.log', 'w') as log_writer:
+									with open(f'uid_fix_log_{datetime.now().strftime("%Y%m%d")}.log', 'w') as log_writer:
 										for log_line in log_lines:
 											log_writer.write(log_line + '\n')
 								except Exception as e:
 									print(Fore.RED + 'Error' + Style.RESET_ALL + ' writing log file: ' + str(e))
-								with open(os.path.join(root, file), 'w') as write_out:
-									for line in output_file:
-										write_out.write(line + '\n')
+								#----- WRITE OUT FIXED FILE -------------------------------#
+								with open(os.path.join(root2, file2), 'w') as write_out:
+									write_out.writelines(output_file)
 								#print('Done writing out ' + os.path.join(root, file))
 		
 		width = 40
