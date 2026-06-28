@@ -10,6 +10,8 @@ init(autoreset = True)
 
 total = 0
 pattern = r'uid://[A-Za-z0-9]+'
+bad_uid_count = 0
+uid_fix_count = 0
 
 file_path = input('Enter path to project folder: ')
 file_path = '/mnt/storagedrive/Game Dev/GodotGames/my-summer-at-sapphos-bathhouse'
@@ -51,8 +53,10 @@ for root, dirs, files in os.walk(file_path):
 				for line in file_open:
 					if 'save_to_file/fallback_path' in line and 'slice' not in line:
 						temp_save_path = line.split(' ')[1].strip().replace('"', '').replace(',', '')
-					if 'uid=' in line:
-						temp_uid = line.split('=')[1].strip().replace('"', '')
+					if 'save_to_file/path' in line:
+						match = re.search(pattern, line)
+						if match:
+							temp_uid = match.group(0)
 			if temp_save_path != '' and temp_uid != '':
 				#good_uids[temp_save_path] = temp_uid
 				log_lines.append(f'\n------ {temp_uid} - {temp_save_path}')
@@ -71,6 +75,7 @@ for root, dirs, files in os.walk(file_path):
 										#print(f'found door cube in: ' + os.path.join(root, file))
 										log_lines.append(f'Found bad UID for {temp_save_path}')
 										log_lines.append(f'------ Good UID: {temp_uid} Bad UID: {line}')
+										bad_uid_count += 1
 										file_check_bool = True
 										break
 							if file_check_bool:
@@ -86,6 +91,7 @@ for root, dirs, files in os.walk(file_path):
 												if item.startswith('uid='):
 													#print(re.sub(pattern, f'uid://{good_uids[key].replace('uid://', '')}', item))
 													log_lines.append(f'Replaced {item} with {temp_uid}')
+													uid_fix_count += 1
 													line_out.append(re.sub(pattern, f'uid://{temp_uid.replace('uid://', '')}', item))
 												else:
 													line_out.append(item)
@@ -117,6 +123,8 @@ for root, dirs, files in os.walk(file_path):
 		processed_count += 1
 		print(f'\nProcessed{processed_count}')
 
+print(f'{bad_uid_count} total bad UIDs found')
+print(f'{uid_fix_count} UIDs fixed')
 print('All files processed')
 """
 for key in good_uids:
